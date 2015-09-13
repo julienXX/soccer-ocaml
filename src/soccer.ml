@@ -1,16 +1,24 @@
 open Lwt
 open Cohttp
 open Cohttp_lwt_unix
+open Yojson.Basic.Util
+open Yojson.Safe
+
+let extract_team_names json =
+  [json]
+    |> filter_member "standing"
+    |> flatten
+    |> filter_member "teamName"
+    |> filter_string
 
 let body =
-  Client.get (Uri.of_string "http://www.football-data.org/soccerseasons/") >>= fun (resp, body) ->
-  let code = resp |> Response.status |> Code.code_of_status in
-  Printf.printf "Response code: %d\n" code;
-  Printf.printf "Headers: %s\n" (resp |> Response.headers |> Header.to_string);
+  Client.get (Uri.of_string "http://api.football-data.org/alpha/soccerseasons/396/leagueTable") >>= fun (resp, body) ->
   body |> Cohttp_lwt_body.to_string >|= fun body ->
-  Printf.printf "Body of length: %d\n" (String.length body);
   body
 
-let () =
+let main () =
   let body = Lwt_main.run body in
-  print_endline ("Received body\n" ^ body)
+  let json = Yojson.Basic.from_string body in
+  List.iter print_endline (extract_team_names json)
+
+let () = main ()
