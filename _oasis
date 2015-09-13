@@ -1,0 +1,22 @@
+Name: FooBar
+Version: 0.1
+Synopsis: A library about Foo and Bar.
+Authors: Me <me@myhost.com>
+License: LGPL with OCaml linking exception
+
+Description: FooBar allows to combine foo and bar efficiently. It also allows to interface with baz.
+Homepage: http://foobar.org
+
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+Executable "soccer"
+  Path: src
+  MainIs: soccer.ml
+  CompiledObject: best
+  BuildDepends:
+    lwt,
+    lwt.unix,
+    cohttp,
+    cohttp.lwt
