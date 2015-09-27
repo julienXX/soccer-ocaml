@@ -11,8 +11,10 @@ let extract_team_names json =
     |> filter_member "teamName"
     |> filter_string
 
+let league_url = "http://api.football-data.org/alpha/soccerseasons/" ^ Sys.argv.(1) ^ "/leagueTable"
+
 let body =
-  Client.get (Uri.of_string "http://api.football-data.org/alpha/soccerseasons/396/leagueTable") >>= fun (resp, body) ->
+  Client.get (Uri.of_string league_url) >>= fun (resp, body) ->
   body |> Cohttp_lwt_body.to_string >|= fun body ->
   body
 
